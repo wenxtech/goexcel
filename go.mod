@@ -1,6 +1,6 @@
 module github.com/wenxtech/goexcel
 
-go 1.23.2
+go 1.20
 
 require github.com/xuri/excelize/v2 v2.9.0
 
