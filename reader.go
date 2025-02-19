@@ -8,7 +8,7 @@ import (
 )
 
 type ExcelReader struct {
-	file               *excelize.File
+	File               *excelize.File
 	sheetNames         []string
 	ableSheets         []string
 	ableSheetLen       int
@@ -35,7 +35,7 @@ func Reader(filePath string, opts ...excelize.Options) (*ExcelReader, error) {
 	}
 
 	er := &ExcelReader{
-		file:         f,
+		File:         f,
 		sheetNames:   sheetNames,
 		ableSheets:   sheetNames,
 		ableSheetLen: len(sheetNames),
@@ -74,7 +74,7 @@ func (er *ExcelReader) initSheet(sheetIndex int) error {
 	}
 
 	// get rows reader
-	rows, err := er.file.Rows(er.ableSheets[sheetIndex])
+	rows, err := er.File.Rows(er.ableSheets[sheetIndex])
 	if err != nil {
 		return err
 	}
@@ -168,7 +168,7 @@ func (er *ExcelReader) Close() {
 	if er.currentRows != nil {
 		er.currentRows.Close()
 	}
-	if er.file != nil {
-		er.file.Close()
+	if er.File != nil {
+		er.File.Close()
 	}
 }

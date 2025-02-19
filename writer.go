@@ -10,7 +10,7 @@ import (
 const MAX_ROW = 1000001
 
 type ExcelWriter struct {
-	file         *excelize.File
+	File         *excelize.File
 	streamWriter *excelize.StreamWriter
 	header       []interface{}
 	currentSheet string
@@ -29,7 +29,7 @@ func Writer() (*ExcelWriter, error) {
 		return nil, err
 	}
 	return &ExcelWriter{
-		file:         f,
+		File:         f,
 		streamWriter: sw,
 		currentSheet: sheetName,
 		sheetNum:     sheetNum,
@@ -74,8 +74,8 @@ func (w *ExcelWriter) WriteRow(row []interface{}) error {
 		}
 		w.sheetNum++
 		newSheetName := getSheetName(w.sheetNum)
-		w.file.NewSheet(newSheetName)
-		sw, err := w.file.NewStreamWriter(newSheetName)
+		w.File.NewSheet(newSheetName)
+		sw, err := w.File.NewStreamWriter(newSheetName)
 		if err != nil {
 			return err
 		}
@@ -102,7 +102,13 @@ func (w *ExcelWriter) Save(filename string) error {
 	if err := w.streamWriter.Flush(); err != nil {
 		return err
 	}
-	return w.file.SaveAs(filename)
+	return w.File.SaveAs(filename)
+}
+
+func (w *ExcelWriter) Close() {
+	if w.File != nil {
+		w.File.Close()
+	}
 }
 
 func (w *ExcelWriter) Close() {
