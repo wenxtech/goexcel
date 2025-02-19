@@ -110,9 +110,3 @@ func (w *ExcelWriter) Close() {
 		w.File.Close()
 	}
 }
-
-func (w *ExcelWriter) Close() {
-	if w.file != nil {
-		w.file.Close()
-	}
-}
