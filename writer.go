@@ -28,7 +28,6 @@ func Writer() (*ExcelWriter, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return &ExcelWriter{
 		file:         f,
 		streamWriter: sw,
@@ -48,7 +47,7 @@ func (w *ExcelWriter) SetSheetMaxRow(sheetMaxRow int) error {
 	return nil
 }
 
-func (w *ExcelWriter) WriteHeaders(headers []interface{}) error {
+func (w *ExcelWriter) WriteHeader(headers []interface{}) error {
 	if err := w.WriteRow(headers); err != nil {
 		return err
 	}
@@ -104,4 +103,10 @@ func (w *ExcelWriter) Save(filename string) error {
 		return err
 	}
 	return w.file.SaveAs(filename)
+}
+
+func (w *ExcelWriter) Close() {
+	if w.file != nil {
+		w.file.Close()
+	}
 }

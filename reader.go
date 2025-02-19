@@ -21,8 +21,8 @@ type ExcelReader struct {
 }
 
 // Reader get a new reader
-func Reader(filePath string) (*ExcelReader, error) {
-	f, err := excelize.OpenFile(filePath)
+func Reader(filePath string, opts ...excelize.Options) (*ExcelReader, error) {
+	f, err := excelize.OpenFile(filePath, opts...)
 	if err != nil {
 		return nil, err
 	}
