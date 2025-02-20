@@ -13,11 +13,11 @@ type ExcelReader struct {
 	ableSheets         []string
 	ableSheetLen       int
 	currentSheetIndex  int
+	currentSheetName   string
 	currentSheetHeader []string
 	currentRows        *excelize.Rows
 	currentRow         []string
 	currentRowIndex    int
-	currentSheetName   string
 }
 
 // Reader get a new reader
@@ -156,6 +156,7 @@ func (er *ExcelReader) ErrorInfo(err error) string {
 	return fmt.Sprintf("Sheet: %s, Row: %d, Error: %s", er.currentSheetName, er.currentRowIndex, err)
 }
 
+// IsEnd check reader is end
 func (er *ExcelReader) IsEnd() bool {
 	if er.currentRows == nil {
 		return true
@@ -171,4 +172,18 @@ func (er *ExcelReader) Close() {
 	if er.File != nil {
 		er.File.Close()
 	}
+}
+
+// RowCount get total row count
+func (er *ExcelReader) RowCount() int64 {
+	var count int64
+	for _, sheet := range er.ableSheets {
+		count += GetSheetRowCount(er.File, sheet)
+	}
+	return count
+}
+
+// DataCount get total data count without header line
+func (er *ExcelReader) DataCount() int64 {
+	return er.RowCount() - int64(len(er.ableSheets))
 }

@@ -23,7 +23,7 @@ func RowDecode(row, header []string, output interface{}) error {
 			continue
 		}
 		value := ""
-		if len(row)-1 > j {
+		if len(row)-1 >= j {
 			value = row[j]
 		}
 		if kind == reflect.Ptr {
