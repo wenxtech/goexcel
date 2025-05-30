@@ -105,6 +105,10 @@ func (w *ExcelWriter) Save(filename string) error {
 	return w.File.SaveAs(filename)
 }
 
+func (w *ExcelWriter) Flush(filename string) error {
+	return w.streamWriter.Flush()
+}
+
 func (w *ExcelWriter) Close() {
 	if w.File != nil {
 		w.File.Close()
