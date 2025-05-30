@@ -105,7 +105,7 @@ func (w *ExcelWriter) Save(filename string) error {
 	return w.File.SaveAs(filename)
 }
 
-func (w *ExcelWriter) Flush(filename string) error {
+func (w *ExcelWriter) Flush() error {
 	return w.streamWriter.Flush()
 }
 
