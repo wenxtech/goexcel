@@ -18,6 +18,7 @@ type ExcelReader struct {
 	currentRows        *excelize.Rows
 	currentRow         []string
 	currentRowIndex    int
+	excelTagModifyFunc ExcelTagModifyFunc
 }
 
 // Reader get a new reader
@@ -39,6 +40,9 @@ func Reader(filePath string, opts ...excelize.Options) (*ExcelReader, error) {
 		sheetNames:   sheetNames,
 		ableSheets:   sheetNames,
 		ableSheetLen: len(sheetNames),
+		excelTagModifyFunc: func(tag string) string {
+			return tag
+		},
 	}
 
 	// init first sheet
@@ -131,7 +135,7 @@ func (er *ExcelReader) NextScan(row interface{}) (err error) {
 		}
 		return err
 	}
-	if err = RowDecode(er.currentRow, er.currentSheetHeader, row); err != nil {
+	if err = er.ReaderRowDecode(er.currentRow, er.currentSheetHeader, row); err != nil {
 		return err
 	}
 	return nil
@@ -186,4 +190,14 @@ func (er *ExcelReader) RowCount() int64 {
 // DataCount get total data count without header line
 func (er *ExcelReader) DataCount() int64 {
 	return er.RowCount() - int64(len(er.ableSheets))
+}
+
+func (er *ExcelReader) ReaderRowDecode(row, header []string, output interface{}) error {
+	return RowDecodeModify(row, header, output, er.excelTagModifyFunc)
+}
+
+type ExcelTagModifyFunc func(tag string) string
+
+func (er *ExcelReader) SetExcelTagModifyFunc(f ExcelTagModifyFunc) {
+	er.excelTagModifyFunc = f
 }

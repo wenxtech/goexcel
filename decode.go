@@ -6,8 +6,12 @@ import (
 	"strconv"
 )
 
-// RowDecode reflect excel row to struct
 func RowDecode(row, header []string, output interface{}) error {
+	return RowDecodeModify(row, header, output, nil)
+}
+
+// RowDecode reflect excel row to struct
+func RowDecodeModify(row, header []string, output interface{}, f ExcelTagModifyFunc) error {
 	v := reflect.ValueOf(output).Elem()
 	t := v.Type()
 	for i := 0; i < t.NumField(); i++ {
@@ -15,6 +19,11 @@ func RowDecode(row, header []string, output interface{}) error {
 		excelTag := field.Tag.Get("excel")
 		if excelTag == "" {
 			continue
+		}
+		if f != nil {
+			if modifiedTag := f(excelTag); modifiedTag != "" {
+				excelTag = modifiedTag
+			}
 		}
 		fieldValue := v.Field(i)
 		kind := fieldValue.Type().Kind()
